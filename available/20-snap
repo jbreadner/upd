@@ -1,0 +1,8 @@
+#!/bin/bash
+
+. ../libupd
+check_sudo
+require snap
+
+sudo snap refresh
+

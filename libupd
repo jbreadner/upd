@@ -1,0 +1,27 @@
+#!/bin/bash
+
+# Helper functions that can be used by scriptlets
+
+require() {
+  for prog in "$@"
+  do
+    if ! which "$prog" &>/dev/null
+    then
+      echo "'$prog' required but not present" >&2
+      exit 1
+    fi
+    echo "'$prog' is present"
+  done
+}
+
+check_sudo() {
+  require sudo
+  if ! sudo -n true &>/dev/null
+  then
+    echo "'sudo' not configured to run passwordless!" >&2
+    exit 1
+  fi
+  echo "'sudo' can run passwordless"
+}
+
+

@@ -1,0 +1,23 @@
+#!/bin/bash
+
+. ../libupd
+check_sudo
+require apt-get
+
+
+sudo apt-get update
+sudo apt-get -y full-upgrade
+sudo apt-get -y autoremove
+
+if [ -e /var/run/reboot-required ]
+then
+  if [ -e /var/run/reboot-required.pkgs ]
+  then
+    echo "Restart required due to the following packages:"
+    sed -e 's/^/  * /' /var/run/reboot-required.pkgs
+  else
+    echo "Restart required due to unspecified packages."
+  fi
+else
+  echo "No reboot required."
+fi

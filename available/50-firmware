@@ -1,0 +1,17 @@
+#!/bin/bash
+
+. ../libupd
+
+check_sudo
+require fwupdmgr
+
+if sudo systemctl status fwupd &>/dev/null
+then
+  echo "Updating firmware"
+  sudo fwupdmgr refresh --force
+  sudo fwupdmgr update -y
+else
+  echo "fwupdmgr not running?" >&2
+  exit 1
+fi
+

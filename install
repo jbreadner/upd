@@ -1,0 +1,102 @@
+#!/bin/bash
+
+# This script has two modes; one when run on the primary machine, 
+# and another to install on the secondary (remote) machine.
+
+# Primary machine:  ./install [user@]remotehost [/remote/path]
+
+# Secondary machine: ./install . [/local/path]
+
+# That is, if the first argument is a '.' character, then the
+# script runs in secondary mode, installing to the local machine.
+# Otherwise, the script creates SSH keys to the secondary machine,
+# copies itself and its dependencies to that machine and then
+# launches it with arguments "." "$2"
+
+test_ssh() {
+  echo true | ssh -Tn $1 &>/dev/null
+}
+
+mksshkeys() {
+  # Requires interactivity
+
+  if [ $# -ne 1 ]
+  then
+    echo 'Usage: mksshkeys [user@]host'
+    exit 1
+  fi
+
+  if [ ! -f $HOME/.ssh/id_ed25519.pub ]
+  then
+    echo 'Generating RSA certificate'
+    ssh-keygen -f $HOME/.ssh/id_ed25519 -t ed25519 -a 100 -P ''
+  fi
+
+  echo "Installing ED25519 certificate on $1"
+
+  (
+   echo 'mkdir -p $HOME/.ssh ; chmod 0700 $HOME/.ssh ; '
+   echo 'cat << EOF >> $HOME/.ssh/authorized_keys'
+   cat $HOME/.ssh/id_ed25519.pub
+   echo 'EOF'
+   echo 'chmod 0600 $HOME/.ssh/authorized_keys') | ssh -T $1
+}
+
+
+primary_mode() {
+  TARGET_HOST="$1"
+  TARGET_DIR="$2"
+  test_ssh $TARGET_HOST || mksshkeys $TARGET_HOST
+  scp "$0" ${TARGET_HOST}:/tmp
+  ssh -tX ${TARGET_HOST} /tmp/$(basename $0) . "${TARGET_DIR}"
+}
+
+secondary_mode() {
+  TARGET_DIR="${2}"
+  if [ -z "$TARGET_DIR" ]
+  then
+    TARGET_DIR="$(realpath ~/src)"
+  fi
+  echo "Creating $TARGET_DIR"
+  mkdir -p "$TARGET_DIR" || ( echo "Could not create target dir $TARGET_DIR"; exit 1 )
+
+  SUDOER=/etc/sudoers.d/upd-$(whoami)
+  until sudo -n true
+  do
+    echo Enter password on remote machine $(hostname) to allow passwordless sudo
+    sudo tee $SUDOER >/dev/null  <<< "$(whoami)  ALL=(ALL) NOPASSWD: ALL"
+  done
+  echo "Created $SUDOER"
+
+  if ! which git &>/dev/null
+  then
+    echo "Installing git"
+    sudo apt-get update
+    sudo apt-get -y install git
+  fi
+
+  cd "$TARGET_DIR"
+  echo "Checking out upd.git repo"
+  git clone https://github.com/jbreadner/upd.git
+  sudo tee /etc/profile.d/upd <<< "export PATH=$PATH:$(pwd)/upd"
+
+  echo "Cleaning up"
+  rm -f "$0"
+  echo "Installed"
+  exit 0
+}
+
+if [ $# -lt 1 -o $# -gt 2 -o "$1" = "-h" -o "$1" = "--help" ]
+then
+  echo "Usage: ./install [user@]host [/remote/path]"
+  echo "Installs the 'upd' scripts on the remote host."
+  exit 1
+fi
+
+if [ "$1" = "." ]
+then
+  secondary_mode "$@"
+else
+  primary_mode "$@"
+fi
+
