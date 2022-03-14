@@ -2,14 +2,14 @@
 
 # Helper functions that can be used by scriptlets
 
-require_checked=()
+REQUIRE=()
 
 require() {
   for prog in "$@"
   do
-    for i in "${require_checked[@]}"
+    for i in "${!REQUIRE[@]}"
     do
-      if [ "$i" == "$prog" ]
+      if [ "${REQUIRE[$i]}" == "$prog" ]
       then
         return 0
       fi
@@ -20,12 +20,12 @@ require() {
       exit 1
     fi
     echo "'$prog' is present"
-    required_checked+=(${prog})
+    REQUIRE+=( "${prog}" )
   done
 }
 
 check_sudo() {
-  if [ "$SUDO_CHECKED" = "true"  ]
+  if [ "$CHECK_SUDO" = "true"  ]
   then
     return 0
   fi
@@ -36,7 +36,7 @@ check_sudo() {
     exit 1
   fi
   echo "'sudo' can run passwordless"
-  export SUDO_CHECKED=true
+  export CHECK_SUDO=true
 }
 
 
