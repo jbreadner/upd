@@ -2,6 +2,8 @@
 
 DIR="$(dirname "$0")"
 
+. ${DIR}/libupd
+
 for ITEM in $(ls "$DIR"/enabled/* | sort)
 do
   . $ITEM
