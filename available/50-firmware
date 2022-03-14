@@ -1,6 +1,6 @@
 #!/bin/bash
 
-. ../libupd
+. "$(dirname $0)"/../libupd
 
 check_sudo
 require fwupdmgr
