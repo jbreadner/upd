@@ -1,10 +1,59 @@
 #!/bin/bash
 
+REQUIRE=()
+
+# Purpose:  Validates that a required command is present.
+#           Caches results so multiple calls requiring the
+#           same binary are only checked once.
+# Arguments:
+#  command  (can be absolute path)
+# Returns exit code 0 if command exists
+# Exits the script with code 1 if not
+require() {
+  for prog in "$@"
+  do
+    for i in "${!REQUIRE[@]}"
+    do
+      if [ "${REQUIRE[$i]}" == "$prog" ]
+      then
+        return 0
+      fi
+    done
+    if ! which "$prog" &>/dev/null
+    then
+      echo "'$prog' required but not present" >&2
+      exit 1
+    fi
+    echo "'$prog' is present"
+    REQUIRE+=( "${prog}" )
+  done
+}
+
+# Purpose:  validates that 'sudo' is present, and is configured to
+#           run without requiring user input
+# Arguments:
+#   none
+# Returns exit code 0 if sudo is configured as described
+# Exits the script with code 1 if not
+unset CHECK_SUDO
+check_sudo() {
+  if [ "$CHECK_SUDO" = "true"  ]
+  then
+    return 0
+  fi
+  require sudo
+  if ! sudo -n true &>/dev/null
+  then
+    echo "'sudo' not configured to run passwordless!" >&2
+    exit 1
+  fi
+  echo "'sudo' can run passwordless"
+  export CHECK_SUDO=true
+}
+
 DIR="$(dirname "$0")"
-
-. ${DIR}/libupd
-
 for ITEM in $(ls "$DIR"/enabled/* | sort)
 do
   . $ITEM
 done
+
