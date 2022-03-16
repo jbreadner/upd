@@ -68,7 +68,6 @@ parse_args() {
       ;;
     *)
       echo "Usage: $(basename $0) -i|--install|-v|--validate|-u|--update"
-      exit 1
     esac
   done
   export MODE RESTARTED REMOTE
