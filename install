@@ -14,7 +14,7 @@
 # launches it with arguments "." "$2"
 
 test_ssh() {
-  echo true | ssh -Tn $1 &>/dev/null
+  ssh -n $1 <<< true &>/dev/null
 }
 
 mksshkeys() {
@@ -35,11 +35,12 @@ mksshkeys() {
   echo "Installing ED25519 certificate on $1"
 
   (
-   echo 'mkdir -p $HOME/.ssh ; chmod 0700 $HOME/.ssh ; '
-   echo 'cat << EOF >> $HOME/.ssh/authorized_keys'
-   cat $HOME/.ssh/id_ed25519.pub
-   echo 'EOF'
-   echo 'chmod 0600 $HOME/.ssh/authorized_keys') | ssh -T $1
+    echo 'mkdir -p $HOME/.ssh ; chmod 0700 $HOME/.ssh ; '
+    echo 'cat << EOF >> $HOME/.ssh/authorized_keys'
+    cat $HOME/.ssh/id_ed25519.pub
+    echo 'EOF'
+    echo 'chmod 0600 $HOME/.ssh/authorized_keys'
+  ) | ssh -T $1
 }
 
 
@@ -57,10 +58,11 @@ primary_mode() {
 }
 
 secondary_mode() {
-  TARGET_DIR="${2}"
-  if [ -z "$TARGET_DIR" ]
+  if [ -z "$2" ]
   then
     TARGET_DIR="$(realpath ~/src)"
+  else
+    TARGET_DIR="$(realpath "$2")"
   fi
   echo "Creating $TARGET_DIR"
   mkdir -p "$TARGET_DIR" || ( echo "Could not create target dir $TARGET_DIR"; exit 1 )

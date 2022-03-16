@@ -40,6 +40,10 @@ if [ ! -z "$REMOTE" && -e ~/.upd-remote ]
 then
   while read host dir
   do 
+    if [ -z "$dir" ]
+    then
+      dir=~/src
+    fi
     ssh $host ${dir}/upd/update
   done << ~/.upd-remote
 fi
