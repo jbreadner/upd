@@ -10,7 +10,7 @@ is_changed() {
   popd &>/dev/null
   aftersum="$($sumcmd "$0")"
 
-  [ "$beforesum" = "$aftersum" ]
+  [ "$beforesum" != "$aftersum" ]
 }
 
 update() {
