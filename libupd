@@ -40,23 +40,28 @@ parse_args() {
   do
     case "$1" in
     -a|--all)
+      echo "Installing on remote servers"
       REMOTE=1
       shift
       ;;
     -i|--install)
       MODE=install
+      echo "Install mode"
       shift
       ;;
     -m|--modified)
       RESTARTED=1
+      echo "Restarted update script"
       shift
       ;;
     -u|--update)
       MODE=update
+      echo "Update mode"
       shift
       ;;
     -v|--validate)
       MODE=validate
+      echo "Validate mode"
       shift
       ;;
     *)
