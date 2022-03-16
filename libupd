@@ -3,16 +3,28 @@
 require() {
   for prog in "${@}"
   do
-    which "$prog" >/dev/null || ( echo "'$prog' required but not present." >&2; return 1)
+    if ! which "$prog" >/dev/null
+    then
+     echo "'$prog' required but not present." >&2
+     return 1
+    fi
   done
 }
 
 check_sudo() {
-  require sudo && sudo -n true || ( echo "'sudo' not configured to run passwordless!" >&2 return 1 )
+  if ! sudo -n true
+  then
+    echo "'sudo' not configured to run passwordless!" >&2 
+    return 1
+  fi
 }
 
 install_scriptlet() {
-  require basename dirname || ( echo "Prerequisites to install are missing, install not done.">&2; return 1 )
+  if ! require basename dirname
+  then
+    echo "Prerequisites to install are missing, install not done.">&2
+    return 1
+  fi
   dir="$(basename "$(dirname "$0")")"
   if [ "$dir" == 'available' ]
   then
