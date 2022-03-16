@@ -23,7 +23,7 @@ update() {
 }
 
 
-parse_args
+parse_args "${@}"
 
 echo
 echo ================== Starting $(whoami)@$(hostname) ================== 
@@ -36,7 +36,8 @@ else
   echo ================== Finished $(whoami)@$(hostname) ================== 
 fi
 
-if [ ! -z "$REMOTE" && -e ~/.upd-remote ]
+echo REMOTE=$REMOTE
+if [ ! -z "$REMOTE" -a -e ~/.upd-remote ]
 then
   while read host dir
   do 
