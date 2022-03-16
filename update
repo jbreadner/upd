@@ -51,9 +51,11 @@ check_sudo() {
   export CHECK_SUDO=true
 }
 
+echo ================== Starting $(whoami)@$(hostname) ================== 
 DIR="$(dirname "$0")"
 for ITEM in $(ls "$DIR"/enabled/* | sort)
 do
   . $ITEM
 done
+echo ================== Finished $(whoami)@$(hostname) ================== 
 
