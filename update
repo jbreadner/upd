@@ -39,7 +39,7 @@ fi
 echo REMOTE=$REMOTE
 if [ ! -z "$REMOTE" -a -e ~/.upd-remote ]
 then
-  while read host dir
+  while IFS= read -r host dir
   do 
     if [ -z "$dir" ]
     then
