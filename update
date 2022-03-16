@@ -40,6 +40,8 @@ if [ ! -z "$REMOTE" -a -e ~/.upd-remote ]
 then
   while read -u9 host dir
   do 
+    echo
+    echo
     echo "Updating ${host} via ${dir}/upd/update"
     ssh $host ${dir}/upd/update
   done 9< ~/.upd-remote
