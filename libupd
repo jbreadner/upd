@@ -1,5 +1,7 @@
 #!/bin/bash
 
+echo "Loading libupd"
+
 require() {
   for prog in "${@}"
   do
