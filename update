@@ -1,6 +1,7 @@
 #!/bin/bash
 
-. "$(dirname "$0")/libupd"
+cd "$(dirname "$0")"
+. ./libupd
 
 require git && git pull
 
