@@ -36,6 +36,7 @@ update() {
 }
 
 MODE="$(parse_args)"
+echo MODE=${MODE}
 case "$MODE" in 
   install)
     install
