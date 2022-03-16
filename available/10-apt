@@ -33,7 +33,6 @@ update() {
   else
     echo "No reboot required."
   fi
-  echo ------ Finishing apt-get ------
 }
 
 case "$1" in

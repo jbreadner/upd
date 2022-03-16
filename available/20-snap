@@ -16,7 +16,6 @@ update() {
   echo ------ Starting snap ------
   prereq || return 1
   sudo snap refresh
-  echo ------ Finishing snap ------
 }
 
 case "$1" in
