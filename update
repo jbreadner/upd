@@ -3,13 +3,29 @@
 cd "$(dirname "$0")"
 . ./libupd
 
-require git && git pull
+is_changed() {
+  sumcmd=$(which sha256sum sha1sum md5sum cksum | head -1)
+  beforesum="$($sumcmd "$0")"
+  require git && git pull
+  aftersum="$($sumcmd "$0")"
 
-echo
-echo ================== Starting $(whoami)@$(hostname) ================== 
-for ITEM in $(ls enabled/* | sort)
-do
-  $ITEM --update
-done
-echo ================== Finished $(whoami)@$(hostname) ================== 
+  [ "$beforesum" = "$aftersum" ]
+}
 
+update() {
+  echo
+  echo ================== Starting $(whoami)@$(hostname) ================== 
+  for ITEM in $(ls enabled/* | sort)
+  do
+    $ITEM --update
+  done
+  echo ================== Finished $(whoami)@$(hostname) ================== 
+}
+
+if is_changed && ! [ "$1" = "-m" -o "$1" = "--modified" ]
+then
+  "$0" -m
+  exit
+else
+  update
+fi
