@@ -26,10 +26,9 @@ echo
 echo ================== Starting $(whoami)@$(hostname) ================== 
 if ! [ "$1" = "-m" -o "$1" = "--modified" ] && is_changed
 then
-  echo ------------------ Restarting $(whoami)@$(hostname) ------------------ 
+  echo "Restarting $0"
   "$0" -m
-  exit
 else
   update
+  echo ================== Finished $(whoami)@$(hostname) ================== 
 fi
-echo ================== Finished $(whoami)@$(hostname) ================== 
