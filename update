@@ -13,19 +13,20 @@ is_changed() {
 }
 
 update() {
-  echo
-  echo ================== Starting $(whoami)@$(hostname) ================== 
   for ITEM in $(ls enabled/* | sort)
   do
     $ITEM --update
   done
-  echo ================== Finished $(whoami)@$(hostname) ================== 
 }
 
+echo
+echo ================== Starting $(whoami)@$(hostname) ================== 
 if is_changed && ! [ "$1" = "-m" -o "$1" = "--modified" ]
 then
+  echo ------------------ Restarting $(whoami)@$(hostname) ------------------ 
   "$0" -m
   exit
 else
   update
 fi
+echo ================== Finished $(whoami)@$(hostname) ================== 
