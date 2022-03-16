@@ -24,7 +24,7 @@ update() {
 
 echo
 echo ================== Starting $(whoami)@$(hostname) ================== 
-if is_changed && ! [ "$1" = "-m" -o "$1" = "--modified" ]
+if ! [ "$1" = "-m" -o "$1" = "--modified" ] && is_changed
 then
   echo ------------------ Restarting $(whoami)@$(hostname) ------------------ 
   "$0" -m
