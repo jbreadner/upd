@@ -1,21 +1,61 @@
 #!/bin/bash
 
-check_sudo
-require apt-get
+. "$(dirname "$0")/../libupd"
 
-sudo apt-get update
-sudo apt-get -y full-upgrade
-sudo apt-get -y autoremove
+prereq() {
+  check_sudo && require apt-get
+}
 
-if [ -e /var/run/reboot-required ]
-then
-  if [ -e /var/run/reboot-required.pkgs ]
+install() {
+  require apt-get || ( echo "apt-get not found, not installing $(basename "$0")" >&2; return 1 )
+  require sudo || ( echo "sudo not found, not installing $(basename "$0")" >&2; return 1 )
+
+  install_scriptlet
+}
+
+update() {
+  echo ------ Starting apt-get ------
+  prereq || return 1
+
+  sudo apt-get update
+  sudo apt-get -y full-upgrade
+  sudo apt-get -y autoremove
+
+  if [ -e /var/run/reboot-required ]
   then
-    echo "Restart required due to the following packages:"
-    sed -e 's/^/  * /' /var/run/reboot-required.pkgs
+    if [ -e /var/run/reboot-required.pkgs ]
+    then
+      echo "Restart required due to the following packages:"
+      sed -e 's/^/  * /' /var/run/reboot-required.pkgs
+    else
+      echo "Restart required due to unspecified packages."
+    fi
   else
-    echo "Restart required due to unspecified packages."
+    echo "No reboot required."
   fi
-else
-  echo "No reboot required."
-fi
+  echo ------ Finishing apt-get ------
+}
+
+case "$1" in
+  -i|--install)
+    install
+    exit
+    ;;
+  -v|--validate)
+    if prereq
+    then
+      echo "Prerequisites are met"
+      exit 0
+    else
+      echo "Prequisites are missing!" >&2
+      exit 1
+    fi
+    ;;
+  -u|--update)
+    update
+    exit
+    ;;
+  *)
+    echo "Usage: $(basename $0) -i|--install|-v|--validate|-u|--update"
+    exit 1
+esac

@@ -1,7 +1,44 @@
 #!/bin/bash
 
-check_sudo
-require snap
+. "$(dirname "$0")/../libupd"
 
-sudo snap refresh
+prereq() {
+  check_sudo
+  require snap
+}
 
+install() {
+  require snap || ( echo "snap not found, not installing $(basename "$0")" >&2; return 1 )
+  install_scriptlet
+}
+
+update() {
+  echo ------ Starting snap ------
+  prereq || return 1
+  sudo snap refresh
+  echo ------ Finishing snap ------
+}
+
+case "$1" in
+  -i|--install)
+    install
+    exit
+    ;;
+  -v|--validate)
+    if prereq
+    then
+      echo "Prerequisites are met"
+      exit 0
+    else
+      echo "Prequisites are missing!" >&2
+      exit 1
+    fi
+    ;;
+  -u|--update)
+    update
+    exit
+    ;;
+  *)
+    echo "Usage: $(basename $0) -i|--install|-v|--validate|-u|--update"
+    exit 1
+esac

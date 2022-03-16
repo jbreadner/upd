@@ -80,9 +80,10 @@ secondary_mode() {
   git clone https://github.com/jbreadner/upd.git
   sudo tee /etc/profile.d/upd <<< "export PATH=$PATH:$(pwd)/upd"
 
-  cd "${TARGET_DIR}/upd/enabled"
-  ln -s ../available/10-apt
-  ln -s ../available/20-snap
+  for scriptlet in "${TARGET_DIR}"/upd/available/*
+  do
+    "$scriptlet" --install
+  done
 
   echo "Cleaning up"
   rm -f "$0"

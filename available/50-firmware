@@ -1,15 +1,51 @@
 #!/bin/bash
 
-check_sudo
-require fwupdmgr
+. "$(dirname "$0")/../libupd"
 
-if sudo systemctl status fwupd &>/dev/null
-then
-  echo "Updating firmware"
-  sudo fwupdmgr refresh --force
-  sudo fwupdmgr update -y
-else
-  echo "fwupdmgr not running?" >&2
-  exit 1
-fi
+prereq() {
+  check_sudo
+  require fwupdmgr
+}
 
+install() {
+  require fwupdmgr || ( echo "fwupdmgr not found, not installing $(basename "$0")" >&2; return 1 )
+  install_scriptlet
+}
+
+update () {
+  echo ------ Starting firmware ------
+  if sudo systemctl status fwupd &>/dev/null
+  then
+    echo "Updating firmware"
+    sudo fwupdmgr refresh --force
+    sudo fwupdmgr update -y
+  else
+    echo "fwupdmgr not running?" >&2
+    return 1
+  fi
+  echo ------ Finishing firmware ------
+}
+
+case "$1" in
+  -i|--install)
+    install
+    exit
+    ;;
+  -v|--validate)
+    if prereq
+    then
+      echo "Prerequisites are met"
+      exit 0
+    else
+      echo "Prequisites are missing!" >&2
+      exit 1
+    fi
+    ;;
+  -u|--update)
+    update
+    exit
+    ;;
+  *)
+    echo "Usage: $(basename $0) -i|--install|-v|--validate|-u|--update"
+    exit 1
+esac

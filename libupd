@@ -1,0 +1,22 @@
+#!/bin/bash
+
+require() {
+  for prog in "${@}"
+  do
+    which "$prog" >/dev/null || ( echo "'$prog' required but not present." >&2; return 1)
+  done
+}
+
+check_sudo() {
+  require sudo && sudo -n true || ( echo "'sudo' not configured to run passwordless!" >&2 return 1 )
+}
+
+install_scriptlet() {
+  require basename dirname || ( echo "Prerequisites to install are missing, install not done.">&2; return 1 )
+  dir="$(basename "$(dirname "$0")")"
+  if [ "$dir" == 'available' ]
+  then
+    echo "Installing $(basename "$0")"
+    ln -sf "../available/$(basename "$0")" "$(dirname "$(dirname "$0")")/enabled/$(basename "$0")"
+  fi
+}
