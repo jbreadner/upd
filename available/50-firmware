@@ -25,7 +25,7 @@ update () {
   fi
 }
 
-MODE="$(parse_args "${@}")"
+parse_args "${@}"
 case "$MODE" in 
   install)
     install
