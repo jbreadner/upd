@@ -36,7 +36,6 @@ else
   echo ================== Finished $(whoami)@$(hostname) ================== 
 fi
 
-echo REMOTE=$REMOTE
 if [ ! -z "$REMOTE" -a -e ~/.upd-remote ]
 then
   while read -u9 host dir
