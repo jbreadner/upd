@@ -115,4 +115,3 @@ then
 else
   primary_mode "$@"
 fi
-
