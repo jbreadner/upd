@@ -6,6 +6,7 @@ is_changed() {
   sumcmd=$(which sha256sum sha1sum md5sum cksum | head -1)
   beforesum="$($sumcmd "$0")"
   pushd "$(dirname "$0")" &>/dev/null
+  echo "------ Updating upd ------"
   require git && git pull
   popd &>/dev/null
   aftersum="$($sumcmd "$0")"
