@@ -22,13 +22,24 @@ update() {
   done
 }
 
+
+parse_args
+
 echo
 echo ================== Starting $(whoami)@$(hostname) ================== 
-if ! [ "$1" = "-m" -o "$1" = "--modified" ] && is_changed
+if [ -z "$RESTARTED" ] && is_changed
 then
   echo "Restarting $0"
-  "$0" -m
+  "$0" --modified "${@}"
 else
   update
   echo ================== Finished $(whoami)@$(hostname) ================== 
+fi
+
+if [ ! -z "$REMOTE" && -e ~/.upd-remote ]
+then
+  while read host dir
+  do 
+    ssh $host ${dir}/upd/update
+  done << ~/.upd-remote
 fi

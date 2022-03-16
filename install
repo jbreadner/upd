@@ -48,7 +48,12 @@ primary_mode() {
   TARGET_DIR="$2"
   test_ssh $TARGET_HOST || mksshkeys $TARGET_HOST
   scp "$0" ${TARGET_HOST}:/tmp
-  ssh -tX ${TARGET_HOST} /tmp/$(basename $0) . "${TARGET_DIR}"
+  if ssh -tX ${TARGET_HOST} /tmp/$(basename $0) . "${TARGET_DIR}"
+  then
+    echo "${TARGET_HOST} ${TARGET_DIR}" >> ~/.upd-remote
+  else
+    echo "Install failed!"
+  fi
 }
 
 secondary_mode() {

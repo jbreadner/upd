@@ -17,23 +17,18 @@ update () {
   /usr/games/steamcmd +login anonymous +app_update +quit
 }
 
-case "$1" in
-  -i|--install)
+parse_args
+case "$MODE" in 
+  install)
     install
     exit
     ;;
-  -v|--validate)
-    if prereq
-    then
-      echo "Prerequisites are met"
-      exit 0
-    else
-      echo "Prequisites are missing!" >&2
-      exit 1
-    fi
-    ;;
-  -u|--update)
+  update)
     update
+    exit
+    ;;
+  validate)
+    validate
     exit
     ;;
   *)
