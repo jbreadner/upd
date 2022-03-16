@@ -1,7 +1,5 @@
 #!/bin/bash
 
-echo "Loading libupd"
-
 require() {
   for prog in "${@}"
   do
@@ -42,33 +40,27 @@ parse_args() {
   do
     case "$1" in
     -a|--all)
-      echo "Installing on remote servers"
       REMOTE=1
       shift
       ;;
     -i|--install)
-      MODE=install
-      echo "Install mode"
+      echo install
       shift
       ;;
     -m|--modified)
       RESTARTED=1
-      echo "Restarted update script"
       shift
       ;;
     -u|--update)
-      MODE=update
-      echo "Update mode"
+      echo update
       shift
       ;;
     -v|--validate)
-      MODE=validate
-      echo "Validate mode"
+      echo validate
       shift
       ;;
     *)
-      echo "Usage: $(basename $0) -i|--install|-v|--validate|-u|--update"
-      echo "Bad argument: $1"
+      shift
     esac
   done
   export MODE RESTARTED REMOTE

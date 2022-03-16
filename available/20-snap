@@ -18,7 +18,7 @@ update() {
   sudo snap refresh
 }
 
-parse_args
+MODE="$(parse_args)"
 case "$MODE" in 
   install)
     install
