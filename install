@@ -53,7 +53,7 @@ primary_mode() {
   then
     TMP=$(mktemp)
     grep -v "^${TARGET_HOST} " ~/.upd-remote > $TMP
-    echo "${TARGET_HOST} ${TARGET_DIR}" >> $TMP
+    echo "${TARGET_HOST} ${TARGET_DIR:-~/src}" >> $TMP
     mv $TMP ~/.upd-remote
   else
     echo "Install failed!"

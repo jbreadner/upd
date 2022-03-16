@@ -39,12 +39,9 @@ fi
 echo REMOTE=$REMOTE
 if [ ! -z "$REMOTE" -a -e ~/.upd-remote ]
 then
-  while IFS= read -r host dir
+  while read host dir
   do 
-    if [ -z "$dir" ]
-    then
-      dir=~/src
-    fi
+    echo "Updating ${host} via ${dir}/upd/update"
     ssh $host ${dir}/upd/update
   done < ~/.upd-remote
 fi
