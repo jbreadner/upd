@@ -7,15 +7,22 @@ prereq() {
 }
 
 install() {
-  require apt-get || ( echo "apt-get not found, not installing $(basename "$0")" >&2; return 1 )
-  require sudo || ( echo "sudo not found, not installing $(basename "$0")" >&2; return 1 )
-
+  if ! require apt-get
+  then
+    echo "apt-get not found, not installing $(basename "$0")" >&2
+    return 1
+  fi
+  if ! require sudo
+  then
+    echo "sudo not found, not installing $(basename "$0")" >&2
+    return 1
+  fi
   install_scriptlet
 }
 
 update() {
   echo ------ Starting apt-get ------
-  prereq || return 1
+  if ! prereq || return 1
 
   sudo apt-get update
   sudo apt-get -y full-upgrade

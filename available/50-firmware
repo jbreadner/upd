@@ -8,7 +8,11 @@ prereq() {
 }
 
 install() {
-  require fwupdmgr || ( echo "fwupdmgr not found, not installing $(basename "$0")" >&2; return 1 )
+  if ! require fwupdmgr
+  then
+    echo "fwupdmgr not found, not installing $(basename "$0")" >&2
+    return 1
+  fi
   install_scriptlet
 }
 

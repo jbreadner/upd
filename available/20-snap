@@ -8,7 +8,11 @@ prereq() {
 }
 
 install() {
-  require snap || ( echo "snap not found, not installing $(basename "$0")" >&2; return 1 )
+  if ! require snap
+  then
+    echo "snap not found, not installing $(basename "$0")" >&2
+    return 1
+  fi
   install_scriptlet
 }
 
