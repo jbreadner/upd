@@ -44,7 +44,7 @@ parse_args() {
       shift
       ;;
     -i|--install)
-      echo install
+      MODE=install
       shift
       ;;
     -m|--modified)
@@ -52,11 +52,11 @@ parse_args() {
       shift
       ;;
     -u|--update)
-      echo update
+      MODE=update
       shift
       ;;
     -v|--validate)
-      echo validate
+      MODE=validate
       shift
       ;;
     *)
