@@ -41,5 +41,6 @@ case "$MODE" in
     ;;
   *)
     echo "Usage: $(basename $0) -i|--install|-v|--validate|-u|--update"
+    echo "Called as: $0 ${@}"
     exit 1
 esac

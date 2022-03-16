@@ -102,6 +102,7 @@ if [ $# -lt 1 -o $# -gt 2 -o "$1" = "-h" -o "$1" = "--help" ]
 then
   echo "Usage: ./install [user@]host [/remote/path]"
   echo "Installs the 'upd' scripts on the remote host."
+  echo Called as: $0 "${@}"
   exit 1
 fi
 
