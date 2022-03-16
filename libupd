@@ -64,4 +64,5 @@ parse_args() {
       exit 1
     esac
   done
+  export MODE RESTARTED REMOTE
 }
