@@ -51,7 +51,10 @@ primary_mode() {
   scp "$0" ${TARGET_HOST}:/tmp
   if ssh -tX ${TARGET_HOST} /tmp/$(basename $0) . "${TARGET_DIR}"
   then
-    echo "${TARGET_HOST} ${TARGET_DIR}" >> ~/.upd-remote
+    TMP=$(mktemp)
+    grep -v "^${TARGET_HOST} " ~/.upd-remote > $TMP
+    echo "${TARGET_HOST} ${TARGET_DIR}" >> $TMP
+    mv $TMP ~/.upd-remote
   else
     echo "Install failed!"
   fi

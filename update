@@ -45,5 +45,5 @@ then
       dir=~/src
     fi
     ssh $host ${dir}/upd/update
-  done << ~/.upd-remote
+  done < ~/.upd-remote
 fi
