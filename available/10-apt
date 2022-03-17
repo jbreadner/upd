@@ -25,7 +25,7 @@ update() {
   prereq || return 1
 
   sudo apt-get update
-  sudo apt-get -y --with-new-pkgs full-upgrade
+  sudo apt-get -y --with-new-pkgs upgrade
   sudo apt-get -y autoremove
 
   if [ -e /var/run/reboot-required ]
