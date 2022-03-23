@@ -27,6 +27,7 @@ update() {
   sudo apt-get update
   sudo apt-get -y --with-new-pkgs upgrade
   sudo apt-get -y autoremove
+  sudo apt-get clean
 
   if [ -e /var/run/reboot-required ]
   then
