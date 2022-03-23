@@ -25,7 +25,11 @@ mksshkeys() {
     echo 'Usage: mksshkeys [user@]host'
     exit 1
   fi
-
+  if [ ! -d $HOME/.ssh ]
+  then
+    mkdir $HOME/.ssh
+    chmod 0755 $HOME/.ssh
+  fi
   if [ ! -f $HOME/.ssh/id_ed25519.pub ]
   then
     echo 'Generating RSA certificate'
@@ -35,12 +39,12 @@ mksshkeys() {
   echo "Installing ED25519 certificate on $1"
 
   (
-    echo 'mkdir -p $HOME/.ssh ; chmod 0700 $HOME/.ssh ; '
+    echo 'mkdir -p $HOME/.ssh ; chmod 0755 $HOME/.ssh ; '
     echo 'cat << EOF >> $HOME/.ssh/authorized_keys'
     cat $HOME/.ssh/id_ed25519.pub
     echo 'EOF'
     echo 'chmod 0600 $HOME/.ssh/authorized_keys'
-  ) | ssh -T $1
+  ) | ssh $1
 }
 
 
