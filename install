@@ -30,10 +30,10 @@ mksshkeys() {
     mkdir $HOME/.ssh
     chmod 0755 $HOME/.ssh
   fi
-  if [ ! -f $HOME/.ssh/id_ed25519.pub ]
+  if [ ! -f $HOME/.ssh/id_rsa.pub ]
   then
     echo 'Generating RSA certificate'
-    ssh-keygen -f $HOME/.ssh/id_ed25519 -t ed25519 -a 100 -P ''
+    ssh-keygen -f $HOME/.ssh/id_rsa -t rsa -a 100 -P ''
   fi
 
   echo "Installing ED25519 certificate on $1"
@@ -41,7 +41,7 @@ mksshkeys() {
   (
     echo 'mkdir -p $HOME/.ssh ; chmod 0755 $HOME/.ssh ; '
     echo 'cat << EOF >> $HOME/.ssh/authorized_keys'
-    cat $HOME/.ssh/id_ed25519.pub
+    cat $HOME/.ssh/id_rsa.pub
     echo 'EOF'
     echo 'chmod 0600 $HOME/.ssh/authorized_keys'
   ) | ssh $1
@@ -92,7 +92,7 @@ secondary_mode() {
   cd "$TARGET_DIR"
   echo "Checking out upd.git repo"
   git clone https://github.com/jbreadner/upd.git
-  sudo tee /etc/profile.d/upd <<< 'export PATH=$PATH:'$(pwd)'/upd'
+  sudo tee /etc/profile.d/upd.sh <<< 'export PATH=$PATH:'$(pwd)'/upd'
 
   for scriptlet in "${TARGET_DIR}"/upd/available/*
   do
