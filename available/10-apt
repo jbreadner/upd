@@ -18,7 +18,7 @@ install() {
 set_apt() {
   if which apt-fast &>/dev/null
   then
-    APT=apt-fix
+    APT=apt-fast
   elif which apt-get &>/dev/null
   then
     APT=apt-get
