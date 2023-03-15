@@ -7,11 +7,6 @@ prereq() {
 }
 
 install() {
-  if ! require apt-get
-  then
-    echo "apt-get not found, not installing $(basename "$0")" >&2
-    return 1
-  fi
   if ! require sudo
   then
     echo "sudo not found, not installing $(basename "$0")" >&2
@@ -20,14 +15,32 @@ install() {
   install_scriptlet
 }
 
+set_apt() {
+  if which apt-fix &>/dev/null
+  then
+    APT=apt-fix
+  elif which apt-get &>/dev/null
+  then
+    APT=apt-get
+  elif which apt &>/dev/null
+  then
+    APT=apt
+  else
+    echo "'apt' not found, exiting!" >&2
+    exit 1
+  fi
+  echo "Using $APT"
+}
+
 update() {
   echo ------ Starting apt-get ------
   prereq || return 1
+  set_apt
 
-  sudo apt-get update
-  sudo apt-get -y --with-new-pkgs upgrade
-  sudo apt-get -y autoremove
-  sudo apt-get clean
+  sudo $APT update
+  sudo $APT -y --with-new-pkgs upgrade
+  sudo $APT -y autoremove
+  sudo $APT clean
 
   if [ -e /var/run/reboot-required ]
   then
