@@ -34,6 +34,7 @@ then
 else
   update
   echo ================== Finished $(whoami)@$(hostname) ================== 
+  echo ================== $(date) ==================
 fi
 
 if [ ! -z "$REMOTE" -a -e ~/.upd-remote ]
