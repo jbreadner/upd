@@ -1,0 +1,6 @@
+#!/bin/bash
+
+if [ -e /var/run/reboot-required ]
+then
+  echo $(hostname) requires reboot
+fi
