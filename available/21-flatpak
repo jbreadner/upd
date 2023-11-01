@@ -1,0 +1,43 @@
+#!/bin/bash
+
+. "$(dirname "$0")/../libupd"
+
+prereq() {
+  check_sudo
+  require flatpak
+}
+
+install() {
+  if ! require flatpak
+  then
+    echo "flatpak not found, not installing $(basename "$0")" >&2
+    return 1
+  fi
+  install_scriptlet
+}
+
+update() {
+  echo ------ Starting flatpak ------
+  prereq || return 1
+  sudo flatpak update
+}
+
+parse_args "${@}"
+case "$MODE" in 
+  install)
+    install
+    exit
+    ;;
+  update)
+    update
+    exit
+    ;;
+  validate)
+    validate
+    exit
+    ;;
+  *)
+    echo "Usage: $(basename $0) -i|--install|-v|--validate|-u|--update"
+    echo "Called as: $0 ${@}"
+    exit 1
+esac
