@@ -19,7 +19,7 @@ install() {
 update() {
   echo ------ Starting flatpak ------
   prereq || return 1
-  sudo flatpak update
+  sudo flatpak update -y --noninteractive
 }
 
 parse_args "${@}"
