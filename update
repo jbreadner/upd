@@ -48,6 +48,9 @@ then
   done 9< ~/.upd-remote
   while read -u9 host dir
   do 
-    ssh $host ${dir}/upd/needs_reboot
+    if [ ! -z "$dir" ]
+    then
+      ssh $host ${dir}/upd/needs_reboot
+    fi
   done 9< ~/.upd-remote
 fi
