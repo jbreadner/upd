@@ -18,7 +18,8 @@ install() {
 update() {
   echo ------ Starting oh-my-posh  ------
   prereq || return 1
-  if ! oh-my-posh notice
+  oh-my-posh enable notice
+  if oh-my-posh notice 2>&1 | grep "new release" &>/dev/null
   then
     curl -s https://ohmyposh.dev/install.sh | sudo bash -s
   fi
