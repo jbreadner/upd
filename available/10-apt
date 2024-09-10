@@ -37,8 +37,8 @@ update() {
   prereq || return 1
   set_apt
 
-  sudo $APT update
-  sudo $APT -y --with-new-pkgs upgrade
+  sudo $APT -o Acquire::ForceIPv4=true update
+  sudo $APT -y --with-new-pkgs -o Acquire::ForceIPv4=true upgrade
   sudo $APT -y autoremove
   sudo $APT clean
 
